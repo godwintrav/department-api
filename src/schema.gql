@@ -6,15 +6,44 @@ type AuthResponse {
   accessToken: String!
 }
 
+type SubDepartmentOutput {
+  id: Int!
+  name: String!
+}
+
+type DepartmentOutput {
+  id: Int!
+  name: String!
+  subDepartments: [SubDepartmentOutput!]
+}
+
 type Query {
   health: String!
+  departments: [DepartmentOutput!]!
+  department(id: Int!): DepartmentOutput!
 }
 
 type Mutation {
   login(input: LoginInput!): AuthResponse!
+  createDepartment(input: CreateDepartmentInput!): DepartmentOutput!
+  updateDepartment(id: Int!, input: UpdateDepartmentInput!): DepartmentOutput!
+  deleteDepartment(id: Int!): Boolean!
 }
 
 input LoginInput {
   username: String!
   password: String!
+}
+
+input CreateDepartmentInput {
+  name: String!
+  subDepartments: [SubDepartmentInput!]
+}
+
+input SubDepartmentInput {
+  name: String!
+}
+
+input UpdateDepartmentInput {
+  name: String!
 }

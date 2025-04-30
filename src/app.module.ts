@@ -7,6 +7,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { AuthModule } from './auth/auth.module';
 import { User } from './auth/entities/user.entity';
+import { DepartmentsModule } from './departments/departments.module';
+import { Department } from './departments/entities/department.entity';
+import { SubDepartment } from './departments/entities/sub-department.entity';
 
 @Module({
   imports: [
@@ -31,7 +34,7 @@ import { User } from './auth/entities/user.entity';
           username: config.get<string>('DB_USERNAME'),
           password: config.get<string>('DB_PASSWORD'),
           database: config.get<string>('DB_NAME'),
-          entities: [User],
+          entities: [User, Department, SubDepartment],
           synchronize: config.get<string>('NODE_ENV') == 'production' ? false : true,
         ssl: config.get<boolean>('DB_SSL')
           ? {
@@ -42,6 +45,7 @@ import { User } from './auth/entities/user.entity';
       },
     }),
     AuthModule,
+    DepartmentsModule,
   ],
 })
 export class AppModule {}
