@@ -20,7 +20,7 @@ A NestJS-based GraphQL API for managing departments and sub-departments with aut
 
 - Node.js (v16 or later)
 - PostgreSQL
-- npm or yarn
+- npm
 
 ## Setup Instructions
 
