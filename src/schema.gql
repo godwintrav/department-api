@@ -21,6 +21,9 @@ type Query {
   health: String!
   departments: [DepartmentOutput!]!
   department(id: Int!): DepartmentOutput!
+  subDepartments: [SubDepartmentOutput!]!
+  subDepartmentsByDepartment(departmentId: Int!): [SubDepartmentOutput!]!
+  subDepartment(id: Int!): SubDepartmentOutput!
 }
 
 type Mutation {
@@ -28,6 +31,9 @@ type Mutation {
   createDepartment(input: CreateDepartmentInput!): DepartmentOutput!
   updateDepartment(id: Int!, input: UpdateDepartmentInput!): DepartmentOutput!
   deleteDepartment(id: Int!): Boolean!
+  createSubDepartment(input: CreateSubDepartmentInput!): SubDepartmentOutput!
+  updateSubDepartment(input: UpdateSubDepartmentInput!): SubDepartmentOutput!
+  deleteSubDepartment(id: Int!): Boolean!
 }
 
 input LoginInput {
@@ -45,5 +51,15 @@ input SubDepartmentInput {
 }
 
 input UpdateDepartmentInput {
+  name: String!
+}
+
+input CreateSubDepartmentInput {
+  name: String!
+  departmentId: Int!
+}
+
+input UpdateSubDepartmentInput {
+  id: Int!
   name: String!
 }

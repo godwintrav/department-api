@@ -5,6 +5,8 @@ import { Department } from './entities/department.entity';
 import { SubDepartment } from './entities/sub-department.entity';
 import { CreateDepartmentInput } from './types/create-department.input';
 import { UpdateDepartmentInput } from './types/update-department.input';
+import { UpdateSubDepartmentInput } from './types/update-sub-department.input';
+import { CreateSubDepartmentInput } from './types/create-sub-department.input';
 
 @Injectable()
 export class DepartmentsService {
@@ -56,5 +58,49 @@ export class DepartmentsService {
         return false;
     }
     return result.affected > 0;
+  }
+
+  async createSubDepartment(createSubDepartmentInput: CreateSubDepartmentInput): Promise<SubDepartment> {
+    const department = await this.findOne(createSubDepartmentInput.departmentId);
+    const subDepartment = this.subDepartmentRepository.create({
+      name: createSubDepartmentInput.name,
+      department,
+    });
+    return this.subDepartmentRepository.save(subDepartment);
+  }
+
+  async findAllSubDepartments(): Promise<SubDepartment[]> {
+    return this.subDepartmentRepository.find({ relations: ['department'] });
+  }
+
+  async findOneSubDepartment(id: number): Promise<SubDepartment> {
+    const subDepartment = await this.subDepartmentRepository.findOne({
+      where: { id },
+      relations: ['department'],
+    });
+    if (!subDepartment) {
+      throw new NotFoundException(`Sub-department with ID ${id} not found`);
+    }
+    return subDepartment;
+  }
+
+  async updateSubDepartment(updateSubDepartmentInput: UpdateSubDepartmentInput): Promise<SubDepartment> {
+    const subDepartment = await this.findOneSubDepartment(updateSubDepartmentInput.id);
+    subDepartment.name = updateSubDepartmentInput.name;
+    return this.subDepartmentRepository.save(subDepartment);
+  }
+
+  async removeSubDepartment(id: number): Promise<boolean> {
+    const result = await this.subDepartmentRepository.delete(id);
+    if(!result || !result.affected){
+        return false;
+    }
+    return result.affected > 0;
+  }
+
+  async findSubDepartmentsByDepartment(departmentId: number): Promise<SubDepartment[]> {
+    return this.subDepartmentRepository.find({
+      where: { department: { id: departmentId } },
+    });
   }
 }
