@@ -93,6 +93,8 @@ The access token returned should be passed to all protected routes header like t
 
 Note: This mutation creates a new user if the user doesn't exist but if the user does exist it verifies the credentials.
 
+## Protected Routes:
+
 ### Department Operations (PROTECTED ROUTE REQUIRES AUTHORIZATION HEADER WITH BEARER TOKEN)
 
 **Create Department:**
