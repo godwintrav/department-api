@@ -41,7 +41,7 @@ npm install
 
 1. Create a PostgreSQL database and store the name in your `DB_NAME` environment variable
 
-### 4. Environment Configuration (Optional)
+### 4. Environment Configuration (Required)
 
 For production, create a `.env` file by looking at the variables required in `.env.example`:
 
