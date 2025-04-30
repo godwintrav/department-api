@@ -101,8 +101,8 @@ export class DepartmentsService {
     return subDepartment;
   }
 
-  async updateSubDepartment(updateSubDepartmentInput: UpdateSubDepartmentInput): Promise<SubDepartment> {
-    const subDepartment = await this.findOneSubDepartment(updateSubDepartmentInput.id);
+  async updateSubDepartment(id: number, updateSubDepartmentInput: UpdateSubDepartmentInput): Promise<SubDepartment> {
+    const subDepartment = await this.findOneSubDepartment(id);
     subDepartment.name = updateSubDepartmentInput.name;
     return this.subDepartmentRepository.save(subDepartment);
   }

@@ -46,7 +46,7 @@ type Mutation {
   updateDepartment(id: Int!, input: UpdateDepartmentInput!): DepartmentOutput!
   deleteDepartment(id: Int!): Boolean!
   createSubDepartment(input: CreateSubDepartmentInput!): SubDepartmentOutput!
-  updateSubDepartment(input: UpdateSubDepartmentInput!): SubDepartmentOutput!
+  updateSubDepartment(id: Int!, input: UpdateSubDepartmentInput!): SubDepartmentOutput!
   deleteSubDepartment(id: Int!): Boolean!
 }
 
@@ -74,6 +74,5 @@ input CreateSubDepartmentInput {
 }
 
 input UpdateSubDepartmentInput {
-  id: Int!
   name: String!
 }

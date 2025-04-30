@@ -41,8 +41,11 @@ export class SubDepartmentsResolver {
 
   @Mutation(() => SubDepartmentOutput)
   @UseGuards(GqlAuthGuard)
-  updateSubDepartment(@Args('input') updateSubDepartmentInput: UpdateSubDepartmentInput) {
-    return this.departmentsService.updateSubDepartment(updateSubDepartmentInput);
+  updateSubDepartment(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('input') updateSubDepartmentInput: UpdateSubDepartmentInput
+    ) {
+    return this.departmentsService.updateSubDepartment(id, updateSubDepartmentInput);
   }
 
   @Mutation(() => Boolean)
