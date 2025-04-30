@@ -53,6 +53,7 @@ DB_USERNAME=
 DB_PASSWORD=
 DB_NAME=
 SECRET_KEY=
+PORT=
 ```
 
 ### 5. Run the application
