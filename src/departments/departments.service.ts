@@ -1,12 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Department } from './entities/department.entity';
 import { SubDepartment } from './entities/sub-department.entity';
 import { CreateDepartmentInput } from './types/create-department.input';
 import { UpdateDepartmentInput } from './types/update-department.input';
 import { UpdateSubDepartmentInput } from './types/update-sub-department.input';
 import { CreateSubDepartmentInput } from './types/create-sub-department.input';
+import { PaginationArgs } from './types/pagination.args';
 
 @Injectable()
 export class DepartmentsService {
@@ -18,21 +19,37 @@ export class DepartmentsService {
   ) {}
 
   async create(createDepartmentInput: CreateDepartmentInput): Promise<Department> {
+    const existingDepartment = await this.departmentRepository.findOne({where: {name: createDepartmentInput.name}});
+    if(existingDepartment){
+        throw new BadRequestException("Department already created");
+    }
     const department = this.departmentRepository.create({
       name: createDepartmentInput.name,
+      subDepartments: createDepartmentInput.subDepartments
     });
 
-    if (createDepartmentInput.subDepartments && createDepartmentInput.subDepartments.length > 0) {
-      department.subDepartments = createDepartmentInput.subDepartments.map((subDept) =>
-        this.subDepartmentRepository.create({ name: subDept.name }),
-      );
-    }
+    // if (createDepartmentInput.subDepartments && createDepartmentInput.subDepartments.length > 0) {
+    //   department.subDepartments = createDepartmentInput.subDepartments.map((subDept) =>
+    //     this.subDepartmentRepository.create({ name: subDept.name }),
+    //   );
+    // }
 
     return this.departmentRepository.save(department);
   }
 
-  async findAll(): Promise<Department[]> {
-    return this.departmentRepository.find({ relations: ['subDepartments'] });
+  async findAll(paginationArgs: PaginationArgs): Promise<{
+    departments: Department[];
+    total: number;
+  }> {
+    const { page, limit } = paginationArgs;
+    const options: FindManyOptions<Department> = {
+      relations: ['subDepartments'],
+      skip: (page - 1) * limit,
+      take: limit,
+    };
+
+    const [departments, total] = await this.departmentRepository.findAndCount(options);
+    return { departments, total };
   }
 
   async findOne(id: number): Promise<Department> {

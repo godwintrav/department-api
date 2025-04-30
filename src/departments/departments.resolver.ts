@@ -1,12 +1,13 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { DepartmentsService } from './departments.service';
-import { DepartmentOutput } from './types/department.output';
+import { DepartmentOutput, DepartmentsResponse } from './types/department.output';
 import { CreateDepartmentInput } from './types/create-department.input';
 import { UpdateDepartmentInput } from './types/update-department.input';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { User } from '../auth/entities/user.entity';
+import { PaginationArgs } from './types/pagination.args';
 
 @Resolver(() => DepartmentOutput)
 export class DepartmentsResolver {
@@ -21,10 +22,26 @@ export class DepartmentsResolver {
     return this.departmentsService.create(createDepartmentInput);
   }
 
-  @Query(() => [DepartmentOutput], { name: 'departments' })
+  @Query(() => DepartmentsResponse, { name: 'departments' })
   @UseGuards(GqlAuthGuard)
-  findAll() {
-    return this.departmentsService.findAll();
+  async findAll(@Args() paginationArgs: PaginationArgs,) {
+    const { departments, total } = await this.departmentsService.findAll(paginationArgs);
+    
+    const totalPages = Math.ceil(total / paginationArgs.limit);
+    const hasNext = paginationArgs.page < totalPages;
+    const hasPrev = paginationArgs.page > 1;
+
+    return {
+      departments,
+      pagination: {
+        total,
+        page: paginationArgs.page,
+        limit: paginationArgs.limit,
+        totalPages,
+        hasNext,
+        hasPrev,
+      },
+    };
   }
 
   @Query(() => DepartmentOutput, { name: 'department' })

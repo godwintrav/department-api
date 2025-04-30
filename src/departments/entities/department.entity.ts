@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Index } from 'typeorm';
 import { SubDepartment } from './sub-department.entity';
 
 @Entity()
@@ -6,7 +6,8 @@ export class Department {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Index()
+  @Column({unique: true})
   name: string;
 
   @OneToMany(() => SubDepartment, (subDepartment) => subDepartment.department, {

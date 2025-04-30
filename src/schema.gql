@@ -17,9 +17,23 @@ type DepartmentOutput {
   subDepartments: [SubDepartmentOutput!]
 }
 
+type PaginationResponse {
+  total: Int!
+  page: Int!
+  limit: Int!
+  totalPages: Int!
+  hasNext: Boolean!
+  hasPrev: Boolean!
+}
+
+type DepartmentsResponse {
+  departments: [DepartmentOutput!]!
+  pagination: PaginationResponse!
+}
+
 type Query {
   health: String!
-  departments: [DepartmentOutput!]!
+  departments(page: Int! = 1, limit: Int! = 10): DepartmentsResponse!
   department(id: Int!): DepartmentOutput!
   subDepartments: [SubDepartmentOutput!]!
   subDepartmentsByDepartment(departmentId: Int!): [SubDepartmentOutput!]!
